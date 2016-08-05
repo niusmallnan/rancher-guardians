@@ -95,20 +95,18 @@ def launch():
         client = gdapi.Client(url=args.cattle_url,
                               access_key=args.cattle_access_key,
                               secret_key=args.cattle_secret_key)
-    running_services = client.list_processInstance(endTime_null=True,
-                                                   limit=100,
-                                                   sort=id,
-                                                   order='desc',
-                                                   processName='service.activate',
-                                                   exitReason='TIMEOUT')
+    base_param = {'endTime_null': True,
+                  'limit': 100,
+                  'sort': 'id',
+                  'order': 'desc'}
+    running_services = client.list_processInstance(processName='service.activate',
+                                                   exitReason='TIMEOUT',
+                                                   **base_param)
     check_health(running_services, 'service')
 
-    running_instances = client.list_processInstance(endTime_null=True,
-                                                    limit=100,
-                                                    sort=id,
-                                                    order='desc',
-                                                    processName='instance.start',
-                                                    exitReason='UNKNOWN_EXCEPTION')
+    running_instances = client.list_processInstance(processName='instance.start',
+                                                    exitReason='UNKNOWN_EXCEPTION',
+                                                    **base_param)
     check_health(running_instances, 'instance')
 
     threading.Timer(args.timer, launch).start()
