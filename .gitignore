@@ -1,2 +1,8 @@
 *.pyc
-.venv
+__pycache__
+/test.sh
+
+/.idea
+/dist
+/.tox
+/.venv
