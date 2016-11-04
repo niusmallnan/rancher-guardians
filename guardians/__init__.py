@@ -41,11 +41,11 @@ class Config:
 
     @staticmethod
     def service_timeout():
-        return int(default_value('SERVICE_TIMEOUT', 120))
+        return int(default_value('SERVICE_TIMEOUT', 60))
 
     @staticmethod
     def instance_start_count():
-        return int(default_value('INST_START_COUNT', 50))
+        return int(default_value('INST_START_COUNT', 15))
 
     @staticmethod
     def polling_duration():

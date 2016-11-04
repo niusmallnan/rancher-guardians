@@ -45,28 +45,27 @@ class ServiceLoopingSchedule(PollingBase):
                 if timeout > Config.service_timeout():
                     log.info('#####bad service: %s , id: %s####' % (ps.data.name,
                                                                     ps.resourceId))
-                    self.remove_service(ps.resourceId)
+                    self.stop_stack_by_service(ps.resourceId)
             if resource_type == 'instance':
                 instance = self.client.by_id_instance(ps.resourceId)
                 if instance.startCount > Config.instance_start_count():
                     log.info('#####bad instance id: %s####' % (ps.resourceId))
                     self.remove_service_by_instance(instance)
 
-    def remove_service(self, id):
-        service = self.client.by_id_service(id)
-        if service.state != 'removed':
-            try:
-                self.client.action(service, 'remove')
-                log.info('####remove service: %s####' % id)
-            except Exception, e:
-                log.error(e)
+    def deavtive_stack(self, stack_id):
+        try:
+            stack = self.client.by_id_environment(stack_id)
+            self.client.action(stack, 'deactivateservices')
+            log.info('####stop stack: %s####' % stack_id)
+        except Exception, e:
+            log.error(e)
 
+    def stop_stack_by_service(self, service_id):
+        service = self.client.by_id_service(service_id)
+        stack_id = service.environmentId
+        self.deavtive_stack(stack_id)
 
     def remove_service_by_instance(self, instance):
         for service in instance.services().data:
-            try:
-                self.client.action(service, 'remove')
-                log.info('####remove service: %s####' % instance.id)
-            except Exception, e:
-                log.error(e)
-
+            stack_id = service.environmentId
+            self.deavtive_stack(stack_id)
