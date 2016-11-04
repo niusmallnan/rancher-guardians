@@ -43,8 +43,7 @@ class ServiceLoopingSchedule(PollingBase):
             timeout = current_ts - ps.startTimeTS
             if resource_type == 'service':
                 if timeout > Config.service_timeout():
-                    log.info('#####bad service: %s , id: %s####' % (ps.data.name,
-                                                                    ps.resourceId))
+                    log.info('#####bad service id: %s####' % ps.resourceId)
                     self.stop_stack_by_service(ps.resourceId)
             if resource_type == 'instance':
                 instance = self.client.by_id_instance(ps.resourceId)
