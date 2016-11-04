@@ -1,0 +1,7 @@
+#!/bin/bash
+set -e
+
+cd $(dirname $0)/..
+
+VERSION=${1:-latest}
+docker build -t rancher-guardians:$VERSION .
