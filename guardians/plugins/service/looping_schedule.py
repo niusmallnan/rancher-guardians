@@ -31,6 +31,10 @@ class ServiceLoopingSchedule(PollingBase):
                                                     exitReason='TIMEOUT',
                                                     **self.base_param)
         self.check_health(services, 'service')
+        services = self.client.list_processInstance(processName='service.activate',
+                                                    exitReason='UNKNOWN_EXCEPTION',
+                                                    **self.base_param)
+        self.check_health(services, 'service')
         instances = self.client.list_processInstance(processName='instance.start',
                                                      exitReason='UNKNOWN_EXCEPTION',
                                                      **self.base_param)
